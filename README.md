@@ -1,4 +1,4 @@
-A bit of a wobbly hack now, but it works. I think the interface is nice, clean and simple this way. Service is available at [http://connectfourservice.appspot.com/](). Example session below.
+A bit of a wobbly hack now, but it works. I think the interface is nice, clean and simple this way. Service is available at [http://connectfourservice.appspot.com/](http://connectfourservice.appspot.com/). Example session below.
 
 Request parameters (parsed to datatypes as indicated):
 
