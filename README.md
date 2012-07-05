@@ -20,3 +20,121 @@ Service can also throw exceptions, but these are not handled by this protocol. M
 If you find any bugs or issues, please let me know; or fork, fix and push if you want it fixed quickly.
 
 I've tweaked the minimax algorithm to go only two steps deep. In other words, it is now incredibly, horribly bad at playing the game. This makes the service quicker to play and easier to beat. Of course, I intend to make it a lot smarter later ... :-)
+
+***
+
+Example session using Telnet.
+
+Max:~ lukas$ telnet connectfourservice.appspot.com 80
+Trying 74.125.132.141...
+Connected to appspot.l.google.com.
+Escape character is '^]'.
+GET /service?newgame=true&width=7&height=7 HTTP/1.1
+host: connectfourservice.appspot.com
+
+[we start a new game, let service move first]
+
+HTTP/1.1 200 OK
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Set-Cookie: JSESSIONID=6PrVlFhLZmgp8OU8Zrs82Q;Path=/
+Content-Type: text/x-json;charset=UTF-8
+Cache-Control: no-cache
+Vary: Accept-Encoding
+Date: Sat, 16 Jun 2012 11:14:00 GMT
+Server: Google Frontend
+Transfer-Encoding: chunked
+
+5a
+{"response":"move","state":",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,0,,,,,","move":"1"}
+0
+
+
+GET /service?move=2 HTTP/1.1
+host: connectfourservice.appspot.com
+Cookie: JSESSIONID=6PrVlFhLZmgp8OU8Zrs82Q;Path=/
+
+[we move in third column from the left]
+
+HTTP/1.1 200 OK
+Content-Type: text/x-json;charset=UTF-8
+Cache-Control: no-cache
+Vary: Accept-Encoding
+Date: Sat, 16 Jun 2012 11:14:14 GMT
+Server: Google Frontend
+Transfer-Encoding: chunked
+
+5c
+{"response":"move","state":",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,0,,,,,,,0,1,,,,","move":"1"}
+0
+
+GET /service?move=2 HTTP/1.1
+host: connectfourservice.appspot.com
+Cookie: JSESSIONID=6PrVlFhLZmgp8OU8Zrs82Q;Path=/
+
+HTTP/1.1 200 OK
+Content-Type: text/x-json;charset=UTF-8
+Cache-Control: no-cache
+Vary: Accept-Encoding
+Date: Sat, 16 Jun 2012 11:14:16 GMT
+Server: Google Frontend
+Transfer-Encoding: chunked
+
+5e
+{"response":"move","state":",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,1,,,,,,0,1,,,,","move":"2"}
+0
+
+[service decides to block our stack in third column from the left]
+
+GET /service?move=2 HTTP/1.1
+host: connectfourservice.appspot.com
+Cookie: JSESSIONID=6PrVlFhLZmgp8OU8Zrs82Q;Path=/
+
+HTTP/1.1 200 OK
+Content-Type: text/x-json;charset=UTF-8
+Cache-Control: no-cache
+Vary: Accept-Encoding
+Date: Sat, 16 Jun 2012 11:14:17 GMT
+Server: Google Frontend
+Transfer-Encoding: chunked
+
+60
+{"response":"move","state":",,,,,,,,,,,,,,,,,,,,,,,1,,,,,,0,0,,,,,,0,1,,,,,,0,1,,,,","move":"1"}
+0
+
+GET /service?move=2 HTTP/1.1
+host: connectfourservice.appspot.com
+Cookie: JSESSIONID=6PrVlFhLZmgp8OU8Zrs82Q;Path=/
+
+HTTP/1.1 200 OK
+Content-Type: text/x-json;charset=UTF-8
+Cache-Control: no-cache
+Vary: Accept-Encoding
+Date: Sat, 16 Jun 2012 11:14:19 GMT
+Server: Google Frontend
+Transfer-Encoding: chunked
+
+80
+{"response":"move","message":"Looks like I won!","state":",,,,,,,,,,,,,,,,1,,,,,,0,1,,,,,,0,0,,,,,,0,1,,,,,,0,1,,,,","move":"1"}
+0
+
+[service completes four in a row; gloats about it too]
+
+GET /service?move=2 HTTP/1.1
+host: connectfourservice.appspot.com
+Cookie: JSESSIONID=6PrVlFhLZmgp8OU8Zrs82Q;Path=/
+
+[we attempt to make a next move regardless]
+
+HTTP/1.1 200 OK
+Content-Type: text/x-json;charset=UTF-8
+Cache-Control: no-cache
+Vary: Accept-Encoding
+Date: Sat, 16 Jun 2012 11:14:23 GMT
+Server: Google Frontend
+Transfer-Encoding: chunked
+
+33
+{"response":"error","message":"This game is over!"}
+0
+
+[service responds that game is already over and newgame=true is required to continue]
