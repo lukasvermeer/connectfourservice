@@ -12,7 +12,7 @@
 }
 
 .hover-target {
-	background-color: lightgreen;
+	background-color: lightyellow;
 }
 
 #board table td {
@@ -24,7 +24,7 @@
 }
 
 .player1 {
-	background-color: green;
+	background-color: yellow;
 }
 
 .player2 {
